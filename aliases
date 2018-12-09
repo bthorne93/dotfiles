@@ -6,7 +6,7 @@ alias mv='mv -i'
 alias rm='rm -i'
 
 # Colorize output, make ls human readable and classify...
-if [[ `uname` == bthorne ]]; then
+if [[ `uname` == Darwin ]]; then
   alias dircolors='gdircolors'
   alias ls='gls --color=auto -hF'
 else
