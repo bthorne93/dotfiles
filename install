@@ -39,7 +39,7 @@ ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 ln -s "$DOTFILES/emacsrc.org" "$HOME/.emacs.d/emacsrc.org"
 ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
 
-$GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
+eval $GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
 "$DOTFZF/install" --key-bindings --completion --no-update-rc
 
 ZSHPLUGS=(
@@ -48,10 +48,12 @@ ZSHPLUGS=(
   "zsh-syntax-highlighting"
 )
 
-for INDEX in ${!ZSHPLUGS[*]}; do
-  ZSHPLUG="${ZSHPLUGS[$INDEX]}"
-  $GITCLONE "https://github.com/zsh-users/$ZSHPLUG.git" "$DOTLOCAL/$ZSHPLUG"
-done
+#for INDEX in ${!ZSHPLUGS[*]}; do
+#    echo $INDEX
+#    echo $ZSHPLUGS
+#    ZSHPLUG="${ZSHPLUGS[$INDEX]}"
+#    eval $GITCLONE "https://github.com/zsh-users/$ZSHPLUG.git" "$DOTLOCAL/$ZSHPLUG"
+#done
 
 
 cd "$HOME" || exit
