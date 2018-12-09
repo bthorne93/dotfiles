@@ -39,6 +39,9 @@ ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 ln -s "$DOTFILES/config.org" "$HOME/.emacs.d/config.org"
 ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
 
+eval $GITCLONE https://github.com/cpaulik/emacs-material-theme "$HOME/.emacs.d"
+mv "$HOME/.emacs.d/emacs-material-theme/material-theme.el" "$HOME/.emacs.d/material-theme.el"
+
 eval $GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
 "$DOTFZF/install" --key-bindings --completion --no-update-rc
 
