@@ -81,7 +81,7 @@ directory for packages that must be downloaded manually, not from  MELPA.
   #+END_SRC
 * =org-mode=
 ** Beautify =org-mode=
-   #+BEGIN_SRC emacs-lisp a
+   #+BEGIN_SRC emacs-lisp
      (setq org-hide-leading-stars t)
      (setq org-alphabetical-lists t)
      (setq org-src-fontify-natively t)  ;; you want this to activate coloring in blocks
@@ -115,13 +115,13 @@ directory for packages that must be downloaded manually, not from  MELPA.
     #+END_SRC
 * =magit=
   =magit= is an interface for git. 
-  #+BEGIN_SRC emacs-lisp a
+  #+BEGIN_SRC emacs-lisp
     (use-package magit
       :ensure t
       :bind ("C-x g" . magit-status))
   #+END_SRC
 Display line changes in gutter based on git hsitory:
-#+BEGIN_SRC emacs-lisp a
+#+BEGIN_SRC emacs-lisp
   (use-package git-gutter
     :ensure t
     :config
@@ -164,7 +164,7 @@ Display line changes in gutter based on git hsitory:
   #+END_SRC
 * Themes
 ** COMMENT Installation of icons and fonts
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
 (load-theme 'material t)
 #+END_SRC
 * Misc
