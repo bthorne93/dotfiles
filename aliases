@@ -6,7 +6,7 @@ alias mv='mv -i'
 alias rm='rm -i'
 
 # Colorize output, make ls human readable and classify...
-if [[ `uname` == Darwin ]]; then
+if [[ `uname` == bthorne ]]; then
   alias dircolors='gdircolors'
   alias ls='gls --color=auto -hF'
 else
@@ -83,13 +83,3 @@ function nvm {
 function pp {
   ss -lptn sport = :$1 | grep -Eo 'pid=[0-9]+' | cut -c5-
 }
-
-# function vim {
-#   BACKGROUND=$(xtermcontrol --get-bg)
-#
-#   if [[ "$BACKGROUND" == "rgb:0000/2b2b/3636" ]]; then
-#     env vim --cmd "let theme = 'dark'" $@
-#   else
-#     env vim --cmd "let theme = 'light'" $@
-#   fi
-# }
