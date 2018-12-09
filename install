@@ -31,7 +31,7 @@ rm -rf \
 
 mkdir -p \
   "$DOTLOCAL" \
-  ".emacs.d"
+  "$HOME/.emacs.d"
 
 ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
 ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
