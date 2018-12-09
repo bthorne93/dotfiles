@@ -79,40 +79,6 @@ directory for packages that must be downloaded manually, not from  MELPA.
   #+BEGIN_SRC emacs-lisp
    (scroll-bar-mode -1)
   #+END_SRC
-* =swiper ivy counsel and projectile=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ivy
-    :ensure t
-    :diminish ivy-mode
-    :demand t
-    :init
-    ;; set ivy height
-    (setq ivy-height 10)
-    ;; make sure it always stays that high
-    (setq ivy-fixed-height-minibuffer t)
-    ;; virtual buffers - combines many good things into one command
-    (setq ivy-use-virtual-buffers t)
-    ;; full file names - useful when multiple files have same names
-    (setq ivy-virtual-abbreviate 'full)
-    ;; fuzzy everywhere except when searching for something
-    (setq ivy-height-alist 10)
-    (setq ivy-re-builders-alist
-	  '((swiper . ivy--regex-plus)
-	    (t . ivy--regex-fuzzy)))
-    :config
-    (ivy-mode 1)
-    )
-#+END_SRC
-
-  Swiper is an alternative to the native search function of emacs. It requires the
-  ivy system to be installed also, which is a completion framework. 
-  #+BEGIN_SRC emacs-lisp
-    (use-package swiper
-      :ensure t
-      :bind ("C-s" . swiper))
-  #+END_SRC  
-
 * =org-mode=
 ** Beautify =org-mode=
    #+BEGIN_SRC emacs-lisp a
@@ -180,7 +146,7 @@ Display line changes in gutter based on git hsitory:
   (use-package conda
 	:ensure t
 	:config
-	(setq conda-anaconda-home "/home/ben/anaconda3")
+	(setq conda-anaconda-home "/home/bthorne/anaconda3")
 	(conda-env-autoactivate-mode t))
 #+END_SRC
 ** indentation, dashes, and parens.
@@ -277,7 +243,7 @@ Display line changes in gutter based on git hsitory:
     ;; if you want auto-activation (see below for details), include:
     (conda-env-autoactivate-mode t)
     (custom-set-variables
-     '(conda-anaconda-home "/home/ben/anaconda3"))
+     '(conda-anaconda-home "/home/bthorne/anaconda3"))
 #+END_SRC
 With our emacs buffer now aware of our conda environment we can use a flychecker that is aware
 of the imports.
