@@ -1,0 +1,40 @@
+[user]
+	name = Ben Thorne
+	email = bn.thorne@googlemail.com
+
+[github]
+	user = bthorne93
+
+[credential]
+	helper = cache --timeout=86400
+
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+
+[core]
+	editor = emacs
+
+[diff]
+	compactionHeuristic = true
+	rename = copy
+	check = true
+
+[pager]
+	color = true
+
+[push]
+	default = simple
+
+[pull]
+	rebase = true
+
+[help]
+	autocorrect = 1
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

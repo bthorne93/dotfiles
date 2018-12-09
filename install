@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+if [ -z "$HOME" ]; then echo "Seems you're \$HOMEless :("; exit 1; fi
+
+DOTFILES=$HOME/.dotfiles
+DOTFZF=$HOME/.fzf
+DOTLOCAL=$HOME/.local/share/dotfiles
+
+GITCLONE="git clone --depth=1"
+
+cd "$HOME" || exit
+rm -rf "$DOTFILES"
+mkdir "$DOTFILES"
+cd "$DOTFILES" || exit
+
+git init
+git remote add origin https://github.com/bthorne93/dotfiles.git
+git pull origin master
+
+# Swap origin so I can make edits easily
+git remote rm origin
+git remote add origin git@github.com:bthorne93/dotfiles.git
+
+rm -rf \
+  "$DOTFZF" \
+  "$DOTLOCAL" \
+ # "$HOME/.bashrc" \
+  "$HOME/.gitconfig" \
+  "$HOME/.zshrc"
+
+mkdir -p \
+  "$DOTLOCAL" \
+  ".emacs.d"
+
+#ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
+ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
+ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
+ln -s "$DOTFILES/emacsrc.org" "$HOME/.emacs.d/emacsrc.org"
+ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
+
+$GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
+"$DOTFZF/install" --key-bindings --completion --no-update-rc
+
+ZSHPLUGS=(
+  "zsh-completions"
+  "zsh-history-substring-search"
+  "zsh-syntax-highlighting"
+)
+
+for INDEX in ${!ZSHPLUGS[*]}; do
+  ZSHPLUG="${ZSHPLUGS[$INDEX]}"
+  $GITCLONE "https://github.com/zsh-users/$ZSHPLUG.git" "$DOTLOCAL/$ZSHPLUG"
+done
+
+
+cd "$HOME" || exit
+rm -f "${HOME}/.zcompdump*"
+
+echo
+echo "DONEZO!!~!"
