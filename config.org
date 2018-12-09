@@ -113,21 +113,6 @@ directory for packages that must be downloaded manually, not from  MELPA.
       :bind ("C-s" . swiper))
   #+END_SRC  
 
-#+BEGIN_SRC emacs-lisp
-  ;; wrapper around ivy for many functions
-  (use-package counsel
-    :ensure t
-    :diminish counsel-mode
-    :bind (("M-x" . counsel-M-x)
-	   ("M-y" . counsel-yank-pop)
-	   ("C-x C-f" . counsel-find-file)
-	   ("C-h v" . counsel-describe-variable)
-	   ("C-h f" . counsel-describe-function)
-	   ("C-x 8" . counsel-unicode-char))
-    :config
-    (counsel-mode 1))
-#+END_SRC
-
 * =org-mode=
 ** Beautify =org-mode=
    #+BEGIN_SRC emacs-lisp a
@@ -228,7 +213,6 @@ Display line changes in gutter based on git hsitory:
 ** Load theme
 
    #+BEGIN_SRC emacs-lisp
-     (load-theme 'material t)
      (doom-themes-neotree-config)
      (doom-themes-org-config)
    #+END_SRC
