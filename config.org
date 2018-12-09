@@ -204,6 +204,9 @@ Display line changes in gutter based on git hsitory:
   (all-the-icons-install-fonts)
 #+END_SRC
 
+#+BEGIN_SRC
+(load-theme 'material t)
+#+END_SRC
 * Misc
   Add hook to auto-refresh in DocView mode when file on disk changes.
   #+BEGIN_SRC emacs-lisp

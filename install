@@ -36,10 +36,10 @@ mkdir -p \
 ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
 ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
 ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
-ln -s "$DOTFILES/config.org" "$HOME/.emacs.d/config.org"
+cp "$DOTFILES/config.org" "$HOME/.emacs.d/config.org"
 ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
 
-eval $GITCLONE https://github.com/cpaulik/emacs-material-theme "$HOME/.emacs.d"
+eval $GITCLONE https://github.com/cpaulik/emacs-material-theme "$HOME/.emacs.d/emacs-material-theme"
 mv "$HOME/.emacs.d/emacs-material-theme/material-theme.el" "$HOME/.emacs.d/material-theme.el"
 
 eval $GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
