@@ -36,7 +36,7 @@ mkdir -p \
 ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
 ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
 ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
-ln -s "$DOTFILES/emacsrc.org" "$HOME/.emacs.d/emacsrc.org"
+ln -s "$DOTFILES/config.org" "$HOME/.emacs.d/config.org"
 ln -s "$DOTFILES/zshrc" "$HOME/.zshrc"
 
 eval $GITCLONE https://github.com/junegunn/fzf.git "$DOTFZF"
