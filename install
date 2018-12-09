@@ -24,15 +24,16 @@ git remote add origin git@github.com:bthorne93/dotfiles.git
 rm -rf \
   "$DOTFZF" \
   "$DOTLOCAL" \
- # "$HOME/.bashrc" \
+  "$HOME/.bashrc" \
   "$HOME/.gitconfig" \
-  "$HOME/.zshrc"
+  "$HOME/.zshrc" \
+  "$HOME/.emacs.d"
 
 mkdir -p \
   "$DOTLOCAL" \
   ".emacs.d"
 
-#ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
+ln -s "$DOTFILES/bashrc" "$HOME/.bashrc"
 ln -s "$DOTFILES/gitconfig" "$HOME/.gitconfig"
 ln -s "$DOTFILES/init.el" "$HOME/.emacs.d/init.el"
 ln -s "$DOTFILES/emacsrc.org" "$HOME/.emacs.d/emacsrc.org"

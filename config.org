@@ -1,0 +1,337 @@
+# -*- mode: org; -*-
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/htmlize.css"/>
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.pirilampo.org/styles/readtheorg/css/readtheorg.css"/>
+#+HTML_HEAD: <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+#+HTML_HEAD: <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
+#+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
+
+#+TITLE: A literate configuration for emacs
+#+AUTHOR: Ben Thorne 
+
+
+* Find this file!
+  Get this file from any buffer easily.
+  #+BEGIN_SRC emacs-lisp
+    (defun find-config ()
+      "Edit config.org"
+      (interactive)
+      (find-file "~/Projects/dotfiles/config.org"))
+    (global-set-key (kbd "C-c I") 'find-config)
+  #+END_SRC
+* Startup configuration 
+  Remove informational screen on startup, and go straight to a scratch buffer with 
+  no text.
+  #+BEGIN_SRC emacs-lisp
+    (setq inhibit-splash-screen t)
+    (setq inhibit-startup-message t)  
+    (setq inhibit-startup-screen t)
+    (setq initial-scratch-message "")
+  #+END_SRC
+  
+* Add package archives
+  We need to add melpa to download the =use-package= manager. We also add a local
+directory for packages that must be downloaded manually, not from  MELPA.
+   #+BEGIN_SRC emacs-lisp
+     (require 'package)
+     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+     (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+     (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+     (add-to-list 'load-path "~/.emacs.d/lisp/")
+     (package-initialize)
+   #+END_SRC
+
+* Get =use-package= 
+  =use-package= will download and install a package if it is not present. This makes 
+  it ideal for using configuration on  new machines. It is also smart about when 
+  to load packages, and so can improve emacs performance. 
+   #+BEGIN_SRC emacs-lisp
+     (unless  (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+   #+END_SRC
+
+* Frame appearance 
+  Set buffer titles to reflect the name of the file and location.
+  #+BEGIN_SRC emacs-lisp
+    (setq frame-title-format
+	  '("Emacs - " (buffer-file-name "%f"
+					 (dired-directory dired-directory "%b"))))
+  #+END_SRC
+  Make some aesthetic choices:
+  #+BEGIN_SRC emacs-lisp
+    (menu-bar-mode -1) ;; remove menu bar
+    (tool-bar-mode -1)
+    (set-frame-parameter (selected-frame) 'alpha '(100 100)) ;;  make frames transparent
+    (add-to-list 'default-frame-alist '(alpha 100 100))
+    (setq visible-bell t) ;; don't bother me
+  #+END_SRC
+  How parentheses are shown
+  #+BEGIN_SRC emacs-lisp
+    (use-package paren 
+      :ensure t
+      :config
+      (show-paren-mode 1)
+      (transient-mark-mode t))
+  #+END_SRC
+  Get rid of scroll bar
+  #+BEGIN_SRC emacs-lisp
+   (scroll-bar-mode -1)
+  #+END_SRC
+* =swiper ivy counsel and projectile=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :ensure t
+    :diminish ivy-mode
+    :demand t
+    :init
+    ;; set ivy height
+    (setq ivy-height 10)
+    ;; make sure it always stays that high
+    (setq ivy-fixed-height-minibuffer t)
+    ;; virtual buffers - combines many good things into one command
+    (setq ivy-use-virtual-buffers t)
+    ;; full file names - useful when multiple files have same names
+    (setq ivy-virtual-abbreviate 'full)
+    ;; fuzzy everywhere except when searching for something
+    (setq ivy-height-alist 10)
+    (setq ivy-re-builders-alist
+	  '((swiper . ivy--regex-plus)
+	    (t . ivy--regex-fuzzy)))
+    :config
+    (ivy-mode 1)
+    )
+#+END_SRC
+
+  Swiper is an alternative to the native search function of emacs. It requires the
+  ivy system to be installed also, which is a completion framework. 
+  #+BEGIN_SRC emacs-lisp
+    (use-package swiper
+      :ensure t
+      :bind ("C-s" . swiper))
+  #+END_SRC  
+
+#+BEGIN_SRC emacs-lisp
+  ;; wrapper around ivy for many functions
+  (use-package counsel
+    :ensure t
+    :diminish counsel-mode
+    :bind (("M-x" . counsel-M-x)
+	   ("M-y" . counsel-yank-pop)
+	   ("C-x C-f" . counsel-find-file)
+	   ("C-h v" . counsel-describe-variable)
+	   ("C-h f" . counsel-describe-function)
+	   ("C-x 8" . counsel-unicode-char))
+    :config
+    (counsel-mode 1))
+#+END_SRC
+
+* =org-mode=
+** Beautify =org-mode=
+   #+BEGIN_SRC emacs-lisp a
+     (setq org-hide-leading-stars t)
+     (setq org-alphabetical-lists t)
+     (setq org-src-fontify-natively t)  ;; you want this to activate coloring in blocks
+     (setq org-src-tab-acts-natively t) ;; you want this to have completion in blocks
+     (setq org-hide-emphasis-markers t) ;; to hide the *,=, or / markers
+     ;;(setq org-pretty-entities t)       ;; to have \alpha, \to and others display as utf8 http://orgmode.org/manual/Special-symbols.html
+   #+END_SRC 
+   Get syntax highlighting for LaTeX.
+   #+BEGIN_SRC emacs-lisp
+     (setq org-highlight-latex-and-related '(latex))
+   #+END_SRC
+** exporting
+*** LaTeX
+    List of commands to be run by the system latex distribution when exporting to pdf 
+    using LaTeX.
+    #+BEGIN_SRC emacs-lisp
+      (setq org-latex-pdf-process
+	    '("pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f"
+	      "bibtex %b"
+	      "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f"
+	      "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f"))
+    #+END_SRC
+*** HTML
+*** Reveal.js
+    #+BEGIN_SRC emacs-lisp
+      (use-package ox-reveal
+	:ensure ox-reveal
+	:config
+	(setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+	(setq org-reveal-mathjax t))
+    #+END_SRC
+* =magit=
+  =magit= is an interface for git. 
+  #+BEGIN_SRC emacs-lisp a
+    (use-package magit
+      :ensure t
+      :bind ("C-x g" . magit-status))
+  #+END_SRC
+Display line changes in gutter based on git hsitory:
+#+BEGIN_SRC emacs-lisp a
+  (use-package git-gutter
+    :ensure t
+    :config
+    (global-git-gutter-mode 't) 
+    :diminish git-gutter-mode)
+#+END_SRC
+
+* Python programming
+** anaconda
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-indentation
+    :ensure t)
+
+  (use-package anaconda-mode
+    :ensure t
+    :commands anaconda-mode
+    :diminish anaconda-mode
+    :init
+    (progn
+      (add-hook 'python-mode-hook 'anaconda-mode)
+      (add-hook 'python-mode-hook 'eldoc-mode)))
+
+  (use-package company-anaconda
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-anaconda))
+
+  (use-package conda
+	:ensure t
+	:config
+	(setq conda-anaconda-home "/home/ben/anaconda3")
+	(conda-env-autoactivate-mode t))
+#+END_SRC
+** indentation, dashes, and parens.
+   Get right indentation
+   #+BEGIN_SRC emacs-lisp
+     (use-package smart-dash
+	 :ensure t
+	 :config
+	 (add-hook 'python-mode-hook 'smart-dash-mode))
+
+     (use-package aggressive-indent
+       :ensure t)
+
+     (add-hook 'prog-mode-hook 'electric-pair-mode)
+  #+END_SRC
+* Themes
+** COMMENT Installation of icons and fonts
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons
+    :ensure t)
+  (all-the-icons-install-fonts)
+#+END_SRC
+
+** Load theme
+
+   #+BEGIN_SRC emacs-lisp
+     (load-theme 'material t)
+     (doom-themes-neotree-config)
+     (doom-themes-org-config)
+   #+END_SRC
+* Mode-line
+  Use the powerline package for custmoization of the mode-line footer:
+  #+BEGIN_SRC emacs-lisp
+    (require 'powerline)
+    (powerline-default-theme)
+  #+END_SRC
+
+* Misc
+  Add hook to auto-refresh in DocView mode when file on disk changes.
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'doc-view-mode-hook 'auto-revert-mode) 
+  #+END_SRC 
+
+
+* Undo tree
+  Mode for visualization of undo history:
+  #+BEGIN_SRC emacs-lisp
+    (use-package undo-tree
+	:ensure t
+	:chords (("uu" . undo-tree-visualize))
+	:diminish undo-tree-mode:
+	:config
+	(global-undo-tree-mode 1))
+  #+END_SRC
+* cycle windows
+  #+BEGIN_SRC emacs-lisp
+    (defun prev-window ()
+      (interactive)
+      (other-window -1))
+ 
+    (global-set-key (kbd "M-<left>") 'prev-window)
+    (global-set-key (kbd "M-<right>") 'other-window)
+  #+END_SRC
+* latex
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    ;; AuCTeX is better than the built in tex mode; let's use it.
+    :load tex-site
+    :mode ("\\.tex\\'" . TeX-latex-mode)
+    :custom
+    (TeX-lisp-directory (expand-file-name "~/.emacs.d/lib/auctex"))
+    (TeX-data-directory (expand-file-name "~/.emacs.d/lib/auctex"))
+    (TeX-auto-save t)
+    ;;(TeX-electric-escape t)
+    ;;(TeX-electric-math '("\\(" . "\\)") "Smart $ behavior")
+    (TeX-electric-sub-and-superscript t)
+    (TeX-parse-self t)
+    (reftex-plug-into-AUCTeX t)
+    (TeX-source-correlate-method 'synctex)
+    (TeX-source-correlate-mode t)
+    (TeX-clean-confirm nil)
+    ;; TeX-command-list by default contains a bunch of stuff I'll never
+    ;; use. I use latexmk, xelatexmk, and View.  That's pretty much it.
+    ;; Maybe one day I'll add "clean" back to the list.
+    (TeX-command-list
+     '(("latexmk" "latexmk -synctex=1 -quiet -pdf %s"
+	TeX-run-compile nil t :help "Process file with latexmk")
+       ("View" "%V" TeX-run-discard-or-function nil t :help "Run Viewer")
+       ("xelatexmk" "latexmk -synctex=1 -quiet -xelatex %s"
+	TeX-run-compile nil t :help "Process file with xelatexmk")))
+    :hook
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . reftex-mode)
+    (LaTeX-mode . TeX-PDF-mode)
+    :config
+    (setq-default TeX-command-default "latexmk")
+    ;; revert pdf from file after compilation finishes
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+    (use-package latex
+      :bind
+      (:map LaTeX-mode-map
+	    ("M-p" . outline-previous-visible-heading)
+	    ("M-n" . outline-next-visible-heading)
+	    ("<backtab>" . org-cycle))))
+#+END_SRC
+* anaconda
+  This uses the conda.el package from [[https://github.com/necaris/conda.el][this github repo.]] This works by setting all the correct 
+  Python related emacs variables to follow the anaconda environment you specify with 
+  `M-x conda-env-activate` (running this command can also just present you with a list of your
+  installed conda envs). Then, one can run the current python buffer by first starting a python session
+  `C-c C-p`, and then sending the current buffer to that session `C-c C-c`, or if your script contains
+  the customary `if __name__ == __main__`, one must use `C-u C-c C-c`.
+
+  Note that in the code below you have to make sure that your anaconda installation is correctly
+  pointed to.
+  #+BEGIN_SRC emacs-lisp
+    (require 'conda)
+    ;; if you want interactive shell support, include:
+    (conda-env-initialize-interactive-shells)
+    ;; if you want eshell support, include:
+    (conda-env-initialize-eshell)
+    ;; if you want auto-activation (see below for details), include:
+    (conda-env-autoactivate-mode t)
+    (custom-set-variables
+     '(conda-anaconda-home "/home/ben/anaconda3"))
+#+END_SRC
+With our emacs buffer now aware of our conda environment we can use a flychecker that is aware
+of the imports.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+#+END_SRC
