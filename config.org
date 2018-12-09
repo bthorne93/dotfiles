@@ -198,12 +198,6 @@ Display line changes in gutter based on git hsitory:
   #+END_SRC
 * Themes
 ** COMMENT Installation of icons and fonts
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons
-    :ensure t)
-  (all-the-icons-install-fonts)
-#+END_SRC
-
 #+BEGIN_SRC
 (load-theme 'material t)
 #+END_SRC
