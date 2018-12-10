@@ -58,6 +58,20 @@ ZSHPLUGS=(
 #    eval $GITCLONE "https://github.com/zsh-users/$ZSHPLUG.git" "$DOTLOCAL/$ZSHPLUG"
 #done
 
+# The following assumes a conda installation. This is the standard code that would be installed
+# by the conda installer during setup.
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/bthorne/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/home/bthorne/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/bthorne/anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/home/bthorne/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
 
 cd "$HOME" || exit
 rm -f "${HOME}/.zcompdump*"
