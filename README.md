@@ -10,3 +10,4 @@ This repo contains the settings for the following software:
 - emacs
 - global environment
 - git
+- matplotlib
