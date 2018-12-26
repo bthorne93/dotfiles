@@ -10,7 +10,7 @@ if [[ `uname` == Darwin ]]; then
   alias dircolors='gdircolors'
   alias ls='gls --color=auto -hF'
 else
-  alias ls='ls --color=auto -hF'
+  alias ls='ls -ltruop --color=auto -hF'
 
   # ...and standardize to macOS naming on Linux
   alias open='xdg-open'

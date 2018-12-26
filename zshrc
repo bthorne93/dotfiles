@@ -3,14 +3,15 @@
 export DOTFILES=$HOME/.dotfiles
 export INCLUDES=$HOME/.local/share/dotfiles
 
-source $DOTFILES/env
+export MPLCONFIGDIR=$DOTFILES/mplconfigdir
+
 source $DOTFILES/aliases
 
 eval `dircolors $DOTFILES/dircolors`
 
-source $INCLUDES/zsh-completions/zsh-completions.plugin.zsh
-source $INCLUDES/zsh-history-substring-search/zsh-history-substring-search.zsh
-source $INCLUDES/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source $INCLUDES/zsh-completions/zsh-completions.plugin.zsh
+#source $INCLUDES/zsh-history-substring-search/zsh-history-substring-search.zsh
+#source $INCLUDES/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=10000
